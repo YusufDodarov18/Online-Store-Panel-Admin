@@ -1,0 +1,171 @@
+
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --loading-bg: 210 20% 98%;
+    --loading-yellow: 38 95% 55%;
+    --loading-blue: 223 85% 50%;
+    --loading-brand: 222 84% 10%;
+    --loading-track: 220 14% 90%;
+    --loading-text: 220 12% 55%;
+    --loading-glow: 38 90% 55%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --loading-bg: 220 20% 10%;
+    --loading-yellow: 38 95% 55%;
+    --loading-blue: 223 85% 55%;
+    --loading-brand: 0 0% 95%;
+    --loading-track: 220 15% 20%;
+    --loading-text: 220 10% 60%;
+    --loading-glow: 38 90% 50%;
+  }
+}
+
+@keyframes loading-cart-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes loading-cart-draw {
+  0% { stroke-dasharray: 300; stroke-dashoffset: 300; }
+  100% { stroke-dasharray: 300; stroke-dashoffset: 0; }
+}
+
+@keyframes loading-speed-1 {
+  0%, 100% { opacity: 0.2; transform: translateX(0) scaleX(0.8); }
+  50% { opacity: 1; transform: translateX(-8px) scaleX(1); }
+}
+
+@keyframes loading-speed-2 {
+  0%, 100% { opacity: 0.4; transform: translateX(0) scaleX(0.9); }
+  50% { opacity: 1; transform: translateX(-10px) scaleX(1); }
+}
+
+@keyframes loading-speed-3 {
+  0%, 100% { opacity: 0.15; transform: translateX(0) scaleX(0.7); }
+  50% { opacity: 0.9; transform: translateX(-6px) scaleX(1); }
+}
+
+@keyframes loading-wheel-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes loading-sparkle {
+  0%, 100% { opacity: 0; transform: scale(0); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes loading-pulse-glow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.05); }
+}
+
+@keyframes loading-progress-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: hsl(var(--loading-bg));
+}
+
+.loading-cart-group {
+  animation: loading-cart-bounce 1.4s ease-in-out infinite;
+}
+
+.loading-cart-path {
+  stroke: hsl(var(--loading-yellow));
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  animation: loading-cart-draw 2s ease-out forwards;
+}
+
+.loading-speed-line {
+  stroke: hsl(var(--loading-blue));
+  stroke-width: 3;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.loading-speed-1 { animation: loading-speed-1 0.9s ease-in-out infinite; }
+.loading-speed-2 { animation: loading-speed-2 0.9s ease-in-out infinite 0.15s; }
+.loading-speed-3 { animation: loading-speed-3 0.9s ease-in-out infinite 0.3s; }
+
+.loading-wheel {
+  stroke: hsl(var(--loading-yellow));
+  stroke-width: 3;
+  fill: none;
+  animation: loading-wheel-spin 1s linear infinite;
+}
+
+.loading-wheel-center {
+  fill: hsl(var(--loading-yellow));
+}
+
+.loading-sparkle {
+  fill: hsl(var(--loading-yellow));
+  border-radius: 9999px;
+}
+
+.loading-sparkle-1 { animation: loading-sparkle 1.8s ease-in-out infinite; }
+.loading-sparkle-2 { animation: loading-sparkle 1.8s ease-in-out infinite 0.4s; }
+.loading-sparkle-3 { animation: loading-sparkle 1.8s ease-in-out infinite 0.8s; }
+
+.loading-glow {
+  animation: loading-pulse-glow 2.5s ease-in-out infinite;
+  background: radial-gradient(
+    ellipse 80% 65%,
+    hsl(var(--loading-glow) / 0.3) 0%,
+    hsl(var(--loading-glow) / 0.12) 35%,
+    hsl(var(--loading-glow) / 0.03) 59%,
+    transparent 75%
+  );
+}
+
+.loading-brand-text {
+  color: hsl(var(--loading-brand));
+  font-weight: 800;
+  font-size: 1.75rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  font-family: 'Arial Black', 'Arial', sans-serif;
+}
+
+.loading-track {
+  width: 12rem;
+  height: 3px;
+  border-radius: 9999px;
+  background: hsl(var(--loading-track));
+  overflow: hidden;
+  position: relative;
+}
+
+.loading-bar {
+  height: 100%;
+  border-radius: 9999px;
+  background: hsl(var(--loading-yellow));
+  transition: width 0.3s ease-out;
+  position: relative;
+}
+
+.loading-status-text {
+  color: hsl(var(--loading-text));
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  font-weight: 300;
+}

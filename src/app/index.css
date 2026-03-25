@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+
+@media (max-width: 600px) {
+  button[aria-label="Expand navigation menu"] {
+    display: none !important;
+  }
+}
