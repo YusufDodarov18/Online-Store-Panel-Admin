@@ -250,12 +250,8 @@ const Orders = () => {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseDialog} variant="contained">
-              Отмена
-            </Button>
-            <Button color="error" variant="outlined" autoFocus>
-              Удалить
-            </Button>
+            <Button onClick={handleCloseDialog} variant="contained">Отмена</Button>
+            <Button color="error" variant="outlined" autoFocus>Удалить</Button>
           </DialogActions>
         </Box>
       </Dialog>

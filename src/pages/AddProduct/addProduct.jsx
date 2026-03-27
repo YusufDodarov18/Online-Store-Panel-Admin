@@ -663,9 +663,7 @@ export default function AddProduct() {
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 250 }} aria-label="simple table">
                 <TableHead>
-                  <TableRow
-                    className={`${theme === "light" ? "bg-[#F5F5F5]" : ""}`}
-                  >
+                  <TableRow className={`${theme === "light" ? "bg-[#F5F5F5]" : ""}`}>
                     <TableCell className="color-[#5A607F]">Фото</TableCell>
                     <TableCell className="color-[#5A607F]">Имя файла</TableCell>
                     <TableCell className="color-[#5A607F]">Действие</TableCell>

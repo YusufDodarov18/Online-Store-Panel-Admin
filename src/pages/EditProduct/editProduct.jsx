@@ -689,10 +689,10 @@ function EditProduct() {
                 multiple
                 ref={fileRef}
                 className="hidden"
-                onChange={async (e) => {
+                onChange={(e) => {
                   const files = e?.target?.files;
                   if (files && files.length > 0) {
-                    await dispatch(
+                    dispatch(
                       addImageToProduct({
                         productId: id,
                         images: Array.from(files),
@@ -705,9 +705,7 @@ function EditProduct() {
               <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 250 }} aria-label="simple table">
                   <TableHead>
-                    <TableRow
-                      className={`${theme === "light" ? "bg-[#F5F5F5]" : ""}`}
-                    >
+                    <TableRow className={`${theme === "light" ? "bg-[#F5F5F5]" : ""}`}>
                       <TableCell className="color-[#5A607F]">Фото</TableCell>
                       <TableCell className="color-[#5A607F]">
                         Имя файла
@@ -726,13 +724,11 @@ function EditProduct() {
                             className="w-10 h-10 object-cover rounded"
                           />
                         </TableCell>
-                        <TableCell className="indent-2">
-                          {img.image.slice(0, 10)}
-                        </TableCell>
+                        <TableCell className="indent-2">{img.image.slice(0, 10)}</TableCell>
                         <TableCell className="indent-3">
                           <DeleteIcon
-                            onClick={async () =>
-                              await dispatch(
+                            onClick={() =>
+                              dispatch(
                                 deleteImageFromProduct({
                                   productId: id,
                                   imageId: img.id,

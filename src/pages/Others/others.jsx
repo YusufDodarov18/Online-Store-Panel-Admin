@@ -283,9 +283,7 @@ const Ohters = () => {
               <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 200 }} aria-label="simple table">
                   <TableHead>
-                    <TableRow
-                      className={`${theme === "light" ? "bg-[#F5F5F5]" : ""}`}
-                    >
+                    <TableRow className={`${theme === "light" ? "bg-[#F5F5F5]" : ""}`}>
                       <TableCell
                         sx={{ width: "70%" }}
                         className="text-[#5A607F]"
@@ -424,9 +422,7 @@ const Ohters = () => {
                             variant="contained"
                             sx={{ backgroundColor: "#2563EB" }}
                           >
-                            <Link
-                              to={`/dashboard/editProduct/${elem.productId}`}
-                            >
+                            <Link to={`/dashboard/editProduct/${elem.productId}`}>
                               <EditIcon className="cursor-pointer text-white" />
                             </Link>
                           </Button>
