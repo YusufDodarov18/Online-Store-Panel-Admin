@@ -9,7 +9,7 @@ const initialState={
 }
 
 export const getProducts=createAsyncThunk("Products/getProducts",async()=>{
-    try {
+    try {   
         const {data}=await axiosRequest.get(`/Products/get-products?PageSize=${100}`)
         return data.data
     } catch (error) {
@@ -18,10 +18,10 @@ export const getProducts=createAsyncThunk("Products/getProducts",async()=>{
     }
 })
 
-export const addProduct = createAsyncThunk("Products/addProduct", async(formData, {rejectWithValue})=>{
+export const addProduct = createAsyncThunk("Products/addProduct", async(formData,{rejectWithValue})=>{
     try {
         const {data} = await axiosRequest.post(`/Products/add-product`,formData)
-        toast.success('Product added successfully', { autoClose: 2000 })
+        toast.success('Product added successfully',{ autoClose: 2000 })
         return data.data
     } catch (error) {
         console.error(error)
@@ -30,14 +30,18 @@ export const addProduct = createAsyncThunk("Products/addProduct", async(formData
     }
 })
 
-export const updateProduct = createAsyncThunk("Products/updateProduct", async(formData,productId)=>{
+export const updateProduct = createAsyncThunk("Products/updateProduct", async({formData,productId},{rejectWithValue})=>{
     try {
-        const {data}=await axiosRequest.put('/Products/update-product',formData)
+        formData.append("productId", productId);
+
+        const { data } = await axiosRequest.put('/Products/update-product', formData)
         toast.success('Product updated successfully', { autoClose: 2000 })
+       
         return data.data
     } catch (error) {
         console.error(error)
         toast.error('Here Something Incorrect', { autoClose: 1000 })
+        return rejectWithValue(error.response?.data || "Error updating");
     }
 })
 
@@ -50,6 +54,38 @@ export const deleteProduct = createAsyncThunk("Products/deleteProduct", async(id
         console.error(error)
         toast.error('Here Something Incorrect', { autoClose: 1000 })
         return rejectWithValue(error.response?.data || "Error deleting product")
+    }
+})
+
+export const addImageToProduct=createAsyncThunk("Product/addImageToProduct", async({productId,images}, {rejectWithValue})=>{
+    try {
+        const formData = new FormData();
+        formData.append("productId", productId);
+        images.forEach((img) => formData.append("images", img));
+
+        const {data}= await axiosRequest.post(
+            `/Products/add-image-to-product`, formData
+        )
+
+        toast.success("Image added to List!",{autoClose:2000})
+        
+        return {productId, images:data.data}
+    } catch (error) {
+        console.error(error)
+        return rejectWithValue(error.response?.data || "Error adding image");
+    }
+})
+
+export const deleteImageFromProduct=createAsyncThunk("Product/deleteImageFromProduct", async({productId,imageId},{rejectWithValue})=>{
+    try {
+        await axiosRequest.post(`/Products/delete-image-from-product`,
+            {productId,imageId}
+        )
+        toast.success("Image deleted Successfully!", {autoClose:2000})
+        return {imageId,productId}
+    } catch (error) {
+        console.error(error)
+        return rejectWithValue(error.response?.data || "Error deleting image");
     }
 })
 
@@ -83,6 +119,19 @@ export const productSlice = createSlice({
             const index=state.products.findIndex((elem)=>elem.productId===action.payload.productId)
             if(index!==-1){
                 state.products[index]=action.payload
+            }
+        }).addCase(addImageToProduct.fulfilled,(state,action)=>{
+            const product=state.products.find((elem)=>elem.productId===action.payload.productId)
+            if(product){
+              if(!product.images) {
+                product.images = [];
+              }
+              product.images.push(...action.payload.images); 
+            }
+        }).addCase(deleteImageFromProduct.fulfilled,(state,action)=>{
+            const product=state.products.find((elem)=>elem.productId==action.payload.productId)
+            if(product){
+                product.images=product.images.filter(img=>img.id!==action.payload.imageId)
             }
         })
     }

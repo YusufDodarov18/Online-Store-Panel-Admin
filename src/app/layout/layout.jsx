@@ -6,7 +6,6 @@ import DashBoard from "../../pages/Dashboard/dashboard.jsx";
 import Error from "../../pages/Error/error.jsx";
 import {
   AddProducts,
-  GetOrderById,
   EditProducts,
   Order,
   Others,
@@ -68,10 +67,6 @@ export default function Layout() {
         {
           path: "editProduct/:id",
           element: <EditProducts />,
-        },
-        {
-          path: "getOrderById/:id",
-          element: <GetOrderById />,
         },
       ],
     },

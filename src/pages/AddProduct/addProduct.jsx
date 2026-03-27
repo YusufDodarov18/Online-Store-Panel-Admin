@@ -673,7 +673,7 @@ export default function AddProduct() {
                 </TableHead>
                 <TableBody>
                   {images.map((file, index) => (
-                    <TableRow key={file.id}>
+                    <TableRow key={index}>
                       <TableCell className="indent-2">
                         <img
                           src={

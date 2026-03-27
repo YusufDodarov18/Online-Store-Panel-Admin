@@ -9,7 +9,7 @@ import LayersIcon from "@mui/icons-material/Layers";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import { useState } from "react";
 
-const NAV_ITEMS = [
+const Nav_Items = [
   { label: "Панель уп.", icon: <DashboardIcon />, path: "/dashboard" },
   { label: "Заказы", icon: <ShoppingCartIcon />, path: "/dashboard/orders" },
   { label: "Продукты", icon: <LayersIcon />, path: "/dashboard/products" },
@@ -35,7 +35,7 @@ const BottomNavigation = ({ navigate }) => {
         value={value}
         onChange={(event, newValue) => {
           setValue(newValue);
-          navigate(NAV_ITEMS[newValue].path);
+          navigate(Nav_Items[newValue].path);
         }}
         sx={{
           boxShadow: "0 -2px 10px rgba(0,0,0,0.1)",
@@ -43,7 +43,7 @@ const BottomNavigation = ({ navigate }) => {
           borderTopRightRadius: 12,
         }}
       >
-        {NAV_ITEMS.map((item, index) => (
+        {Nav_Items.map((item, index) => (
           <BottomNavigationAction
             key={index}
             label={item.label}

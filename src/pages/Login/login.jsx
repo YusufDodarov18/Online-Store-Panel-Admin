@@ -143,7 +143,7 @@ function Login() {
               }
               disabled={loading}
             >
-              Forgot password?
+              Забыли пароль?
             </Button>
           </Box>
           <Button
@@ -156,7 +156,7 @@ function Login() {
                 : "bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl"
             }`}
           >
-            {loading ? "Logging in..." : "Log In"}
+            {loading ? "Входить..." : "Войти"}
           </Button>
         </Box>
       </section>

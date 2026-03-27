@@ -1,10 +1,11 @@
-import { useEffect, useEffectEvent, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 import {
   Box,
   Button,
+  Chip,
   Dialog,
   FormControl,
   InputLabel,
@@ -29,12 +30,18 @@ import { useTheme } from "../../app/theme/themeContext";
 import { darkOnlyInputSx, darkOnlySelectSx } from "../../app/muiStyle";
 import UploadImage from "../../app/components/ui/uploadImage";
 import { useDispatch, useSelector } from "react-redux";
-import { updateProduct, getProducts } from "../../features/Products/products";
+import {
+  updateProduct,
+  getProducts,
+  deleteImageFromProduct,
+  addImageToProduct,
+} from "../../features/Products/products";
 import { getCategories } from "../../features/Category/categories";
 import { getBrands } from "../../features/Brands/brands";
 import { API } from "../../utils/config";
 import { deleteColor, getColors } from "../../features/Colors/colors";
 import AddColor from "../../app/components/ui/color";
+import axiosRequest from "../../utils/axiosRequest";
 
 const Switch = styled(Swt)(({ theme }) => ({
   width: 43,
@@ -70,9 +77,6 @@ const Switch = styled(Swt)(({ theme }) => ({
   },
 }));
 
-const label = { inputProps: { "aria-label": "Color switch demo" } };
-
-
 function EditProduct() {
   const products = useSelector((store) => store.product.products);
   const brands = useSelector((store) => store.brands.brands);
@@ -92,8 +96,7 @@ function EditProduct() {
   const [newPrice, setNewPrice] = useState(null);
   const [newDisCount, setNewDisCount] = useState(null);
   const [newQuantity, setNewQuantity] = useState(null);
-  const [newimages, setNewImages] = useState([]);
-  const [newColors, setNewColors] = useState([]);
+  const [newImages, setNewImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingColors, setIsLoadingColors] = useState(false);
@@ -101,6 +104,15 @@ function EditProduct() {
   const [selectedColors, setSelectedColors] = useState([]);
   const [color, setColor] = useState("#000000");
   const [colorName, setColorName] = useState("");
+  const [openOptionThings, setOpenOptionThings] = useState(false);
+  const [variant, setVariant] = useState(false);
+  const [sizes, setSizes] = useState([]);
+  const [weights, setWeights] = useState([]);
+  const [options, setOptions] = useState([
+    { id: 1, name: "Размер", values: ["S", "M", "L", "XL"] },
+    { id: 2, name: "Масса", values: ["10", "20", "30", "40"] },
+  ]);
+  const fileRef = useRef();
 
   const handleClickOpen = () => setOpenDialog(true);
   const handleClose = () => setOpenDialog(false);
@@ -135,13 +147,15 @@ function EditProduct() {
         setNewProductName(findProductById.productName);
         setNewCode(findProductById.code);
         setNewDescription(findProductById.description);
-        setNewBrand(findProductById.brand);
+        setNewBrand(findProductById?.brand);
         setNewCategory(findProductById.category);
-        setNewPrice(findProductById.price);
+        setNewPrice(findProductById.price); 
         setNewDisCount(findProductById.disCount);
         setNewQuantity(findProductById.quantity);
         setNewImages(findProductById.images);
-        setNewColors(findProductById?.colors || []);
+        setSelectedColors(findProductById?.colors || []);
+        setSizes(findProductById?.sizes || []);
+        setWeights(findProductById?.weights || []);
       }
     }
   }, [id, products]);
@@ -155,16 +169,16 @@ function EditProduct() {
     setNewPrice(null);
     setNewDisCount(null);
     setNewQuantity(null);
+    setSelectedColors([]);
   };
 
-  const EditFormProduct = async () => {
+  const editProduct = async () => {
     if (
       !newProductName ||
       !newCode ||
       !newCategory ||
       !newPrice ||
-      !newQuantity ||
-      newimages.length == 0
+      !newQuantity
     ) {
       toast.error("Please fill in all required fields.", {
         autoClose: 2000,
@@ -181,6 +195,9 @@ function EditProduct() {
     formData.append("brand", newBrand);
     formData.append("category", newCategory);
     formData.append("price", newPrice);
+    formData.append("colors", JSON.stringify(selectedColors));
+    formData.append("size", JSON.stringify(sizes));
+    formData.append("weight", JSON.stringify(weights));
 
     try {
       setLoading(true);
@@ -195,6 +212,45 @@ function EditProduct() {
     }
   };
 
+  const handleSelectChip = (optionId, value) => {
+    if (optionId === 1) {
+      setSizes((prev) => {
+        if (prev.includes(value)) {
+          toast.error(`Size "${value}" removed!`, { autoClose: 2000 });
+          return prev.filter((v) => v !== value);
+        } else {
+          toast.success(`Size "${value}" selected successfully!`, {
+            autoClose: 2000,
+          });
+          return [...prev, value];
+        }
+      });
+    } else if (optionId === 2) {
+      setWeights((prev) => {
+        if (prev.includes(value)) {
+          toast.error(`Weight "${value}" removed!`, { autoClose: 2000 });
+          return prev.filter((v) => v !== value);
+        } else {
+          toast.success(`Weight "${value}" selected successfully!`, {
+            autoClose: 2000,
+          });
+          return [...prev, value];
+        }
+      });
+    }
+  };
+
+  const handleDeleteChip = (optionId, value) => {
+    setOptions((prev) =>
+      prev.map((opt) =>
+        opt.id === optionId
+          ? { ...opt, values: opt.values.filter((v) => v !== value) }
+          : opt,
+      ),
+    );
+    toast.success("Deleted SuccessFully", { autoClose: 2000 });
+  };
+
   const loadingColor = keyframes`
       0% { background-position: 200% 0; }
       100% { background-position: -200% 0; }`;
@@ -202,7 +258,7 @@ function EditProduct() {
   return (
     <>
       <Box className="p-6">
-        <header className="flex items-center justify-between mb-6 flex-wrap gap-2">
+        <header className="hidden items-center justify-between mb-6 flex-wrap gap-2 md:flex">
           <Typography
             variant="h5"
             className="text-2xl font-bold flex gap-3 items-center"
@@ -221,7 +277,11 @@ function EditProduct() {
                 Отмена
               </Button>
             </Link>
-            <Button variant="contained" disabled={loading}>
+            <Button
+              variant="contained"
+              disabled={loading}
+              onClick={editProduct}
+            >
               {loading ? "Сбережения..." : "Сохранять"}
             </Button>
           </Box>
@@ -337,6 +397,209 @@ function EditProduct() {
                 placeholder="Количество"
               />
             </Box>
+            <Box sx={{ mt: 6 }}>
+              <Box sx={{ maxWidth: 800, mt: 2 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 1,
+                    alignItems: "center",
+                    mb: 3,
+                  }}
+                >
+                  <Switch
+                    checked={openOptionThings}
+                    onChange={() => setOpenOptionThings((p) => !p)}
+                  />
+                  <Typography variant="body1">
+                    К цене этого товара добавляется налог.
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    border: "1px solid #e2e4e9",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    px: 2.5,
+                    py: 2,
+                    mb: 3,
+                  }}
+                >
+                  <Box>
+                    <Typography variant="body1" sx={{ fontWeight: 700 }}>
+                      Различные варианты
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Этот товар имеет несколько вариантов.
+                    </Typography>
+                  </Box>
+                  <Switch
+                    checked={variant}
+                    onChange={() => setVariant((p) => !p)}
+                  />
+                </Box>
+                {variant && (
+                  <Box sx={{ mt: 2 }}>
+                    <Typography variant="body1" sx={{ fontWeight: 700, mb: 2 }}>
+                      Параметры
+                    </Typography>
+                    {options.map((option) => (
+                      <Box
+                        key={option.id}
+                        sx={{
+                          display: "grid",
+                          gridTemplateColumns: "1fr 1fr",
+                          gap: 2,
+                          mb: 2,
+                        }}
+                      >
+                        <Box
+                          component="fieldset"
+                          sx={{
+                            border: "1px solid #e2e4e9",
+                            borderRadius: "8px",
+                            px: 1.5,
+                            py: 0.5,
+                            m: 0,
+                          }}
+                        >
+                          <Box
+                            component="legend"
+                            sx={{
+                              fontSize: 11,
+                              color: "text.secondary",
+                              px: 0.5,
+                            }}
+                          >
+                            Вариант {option.id}
+                          </Box>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 500, pb: 0.5 }}
+                          >
+                            {option.name}
+                          </Typography>
+                        </Box>
+                        <Box
+                          component="fieldset"
+                          sx={{
+                            border: "1px solid #e2e4e9",
+                            borderRadius: "8px",
+                            px: 1.5,
+                            py: 0.5,
+                            m: 0,
+                          }}
+                        >
+                          <Box
+                            component="legend"
+                            sx={{
+                              fontSize: 11,
+                              color: "text.secondary",
+                              px: 0.5,
+                            }}
+                          >
+                            Ценить
+                          </Box>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexWrap: "wrap",
+                              gap: 1,
+                              pb: 0.5,
+                            }}
+                          >
+                            {option.values.map((val) => (
+                              <Chip
+                                key={val}
+                                label={val}
+                                onClick={() => handleSelectChip(option.id, val)}
+                                onDelete={() =>
+                                  handleDeleteChip(option.id, val)
+                                }
+                                size="small"
+                                sx={{
+                                  backgroundColor:
+                                    (option.id === 1 && sizes.includes(val)) ||
+                                    (option.id === 2 && weights.includes(val))
+                                      ? "#d1e7dd"
+                                      : "#eef0f6",
+                                  color: "#374151",
+                                  fontSize: 13,
+                                  borderRadius: "6px",
+                                  height: 28,
+                                  "& .MuiChip-deleteIcon": {
+                                    color: "#9ca3af",
+                                    fontSize: 14,
+                                  },
+                                }}
+                              />
+                            ))}
+                          </Box>
+                        </Box>
+                      </Box>
+                    ))}
+                    <Box
+                      sx={{
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        gap: 2,
+                        mb: 1.5,
+                      }}
+                    >
+                      <Box
+                        component="fieldset"
+                        sx={{
+                          border: "1px solid #e2e4e9",
+                          borderRadius: "8px",
+                          px: 1.5,
+                          py: 1,
+                          m: 0,
+                        }}
+                      >
+                        <TextField
+                          variant="standard"
+                          placeholder="Вариант 2"
+                          fullWidth
+                          InputProps={{ disableUnderline: true }}
+                          sx={{ "& input": { fontSize: 14 } }}
+                        />
+                      </Box>
+                      <Box
+                        component="fieldset"
+                        sx={{
+                          border: "1px solid #e2e4e9",
+                          borderRadius: "8px",
+                          px: 1.5,
+                          py: 1,
+                          m: 0,
+                        }}
+                      >
+                        <TextField
+                          variant="standard"
+                          placeholder="Ценить"
+                          fullWidth
+                          InputProps={{ disableUnderline: true }}
+                          sx={{ "& input": { fontSize: 14 } }}
+                        />
+                      </Box>
+                    </Box>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "#2563EB",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 0.5,
+                      }}
+                    >
+                      +Добавить еще
+                    </Typography>
+                  </Box>
+                )}
+              </Box>
+            </Box>
           </Box>
           <Box sx={{ width: "100%" }}>
             <Box className="border-1 border-gray-300 px-4 py-5">
@@ -376,7 +639,7 @@ function EditProduct() {
                         backgroundColor: elem.color,
                         border: selectedColors?.find(
                           (item) => item?.colorId === elem?.colorId,
-                        )||newColors.find((elem)=>elem.colorId)
+                        )
                           ? `2px solid #2563EB`
                           : "",
                       }}
@@ -418,6 +681,90 @@ function EditProduct() {
                   <Typography>Нет Цвет</Typography>
                 )}
               </Box>
+            </Box>
+            <Box className="flex flex-col gap-4 mt-4">
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                ref={fileRef}
+                className="hidden"
+                onChange={async (e) => {
+                  const files = e?.target?.files;
+                  if (files && files.length > 0) {
+                    await dispatch(
+                      addImageToProduct({
+                        productId: id,
+                        images: Array.from(files),
+                      }),
+                    );
+                  }
+                }}
+              />
+              <UploadImage click={() => fileRef.current?.click()} />
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 250 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow
+                      className={`${theme === "light" ? "bg-[#F5F5F5]" : ""}`}
+                    >
+                      <TableCell className="color-[#5A607F]">Фото</TableCell>
+                      <TableCell className="color-[#5A607F]">
+                        Имя файла
+                      </TableCell>
+                      <TableCell className="color-[#5A607F]">
+                        Действие
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {newImages.map((img, index) => (
+                      <TableRow key={img.id || index}>
+                        <TableCell className="indent-2">
+                          <img
+                            src={`${API}/images/${img.image}`}
+                            className="w-10 h-10 object-cover rounded"
+                          />
+                        </TableCell>
+                        <TableCell className="indent-2">
+                          {img.image.slice(0, 10)}
+                        </TableCell>
+                        <TableCell className="indent-3">
+                          <DeleteIcon
+                            onClick={async () =>
+                              await dispatch(
+                                deleteImageFromProduct({
+                                  productId: id,
+                                  imageId: img.id,
+                                }),
+                              )
+                            }
+                            className="text-[#7E84A3] cursor-pointer"
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+            <Box className="flex flex-col-reverse gap-2 pt-6 md:hidden">
+              <Link to={`/dashboard/products`} className="w-full">
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  sx={{ backgroundColor: theme === "light" ? "" : "#1e293b" }}
+                >
+                  Отмена
+                </Button>
+              </Link>
+              <Button
+                variant="contained"
+                disabled={loading}
+                onClick={editProduct}
+              >
+                {loading ? "Сбережения..." : "Сохранять"}
+              </Button>
             </Box>
           </Box>
         </main>
