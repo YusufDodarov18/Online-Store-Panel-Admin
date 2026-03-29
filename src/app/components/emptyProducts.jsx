@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import noProduct from "../../assets/noProduct.png";
+import noProduct from "../assets/noProduct.png";
 import { Box, Button, Typography } from "@mui/material";
 import { Plus } from "lucide-react";
-import { useTheme } from "../../theme/themeContext";
+import { useTheme } from "../theme/themeContext";
 
 export default function EmptyProducts() {
   const { theme } = useTheme();

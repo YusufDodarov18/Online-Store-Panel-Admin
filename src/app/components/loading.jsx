@@ -2,7 +2,7 @@ import "./loading.css"
 import { useEffect, useState } from "react";
 import fastCartDark from "./img1.png"
 import fastCartLight from "./img2.png";
-import { useTheme } from "../../../theme/themeContext";
+import { useTheme } from "../theme/themeContext";
 
 const Loading = () => {
   const [progress, setProgress] = useState(0);

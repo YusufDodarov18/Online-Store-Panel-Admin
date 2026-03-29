@@ -30,13 +30,13 @@ import { getBrands } from "../../features/Brands/brands";
 import { getCategories } from "../../features/Category/categories";
 import { API } from "../../utils/config";
 import { toast } from "react-toastify";
-import UploadImage from "../../app/components/ui/uploadImage";
+import UploadImage from "../../app/components/uploadImage";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AddColor from "../../app/components/ui/color";
+import AddColor from "../../app/components/color";
 
 const Switch = styled(Swt)(({ theme }) => ({
   width: 43,

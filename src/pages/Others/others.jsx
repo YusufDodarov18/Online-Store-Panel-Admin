@@ -26,7 +26,7 @@ import { useEffect, useRef, useState } from "react";
 import { FadeLoader } from "react-spinners";
 import { useTheme } from "../../app/theme/themeContext";
 import { useDispatch, useSelector } from "react-redux";
-import EmptyProducts from "../../app/components/ui/emptyProducts";
+import EmptyProducts from "../../app/components/emptyProducts";
 import {
   addCategory,
   deleteCategory,
@@ -34,7 +34,7 @@ import {
   updateCategory,
 } from "../../features/Category/categories";
 import { darkOnlyInputSx } from "../../app/muiStyle";
-import UploadImage from "../../app/components/ui/uploadImage";
+import UploadImage from "../../app/components/uploadImage";
 import {
   addBrand,
   deleteBrand,

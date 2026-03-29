@@ -1,5 +1,5 @@
 import { TableCell, TableRow, Box } from "@mui/material";
-import { API } from "../../../utils/config";
+import { API } from "../../utils/config";
 
 export default function RecentTransactions({ products }) {
   return (

@@ -13,7 +13,7 @@ import {
 } from "../routes/routes.jsx";
 import { Suspense, useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
-import Loading from "../components/Layout/Loading/Loading.jsx";
+import Loading from "../components/loading.jsx";
 import AuthCheck from "../../utils/AuthCheck.js";
 
 export default function Layout() {

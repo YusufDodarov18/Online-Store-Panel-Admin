@@ -20,7 +20,7 @@ axiosRequest.interceptors.request.use(
 axiosRequest.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401 && typeof window !== "undefined") {
+    if (error?.response?.status === 401 && typeof window !== "undefined") {
       localStorage.removeItem("admin");
       window.location.href = "/";
     }

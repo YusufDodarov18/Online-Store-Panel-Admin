@@ -28,7 +28,7 @@ import Paper from "@mui/material/Paper";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useTheme } from "../../app/theme/themeContext";
 import { darkOnlyInputSx, darkOnlySelectSx } from "../../app/muiStyle";
-import UploadImage from "../../app/components/ui/uploadImage";
+import UploadImage from "../../app/components/uploadImage";
 import { useDispatch, useSelector } from "react-redux";
 import {
   updateProduct,
@@ -40,7 +40,7 @@ import { getCategories } from "../../features/Category/categories";
 import { getBrands } from "../../features/Brands/brands";
 import { API } from "../../utils/config";
 import { deleteColor, getColors } from "../../features/Colors/colors";
-import AddColor from "../../app/components/ui/color";
+import AddColor from "../../app/components/color";
 import axiosRequest from "../../utils/axiosRequest";
 
 const Switch = styled(Swt)(({ theme }) => ({

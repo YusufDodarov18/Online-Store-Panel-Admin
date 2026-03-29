@@ -1,7 +1,7 @@
 import { Box, Button, Dialog, TextField, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch } from "react-redux";
-import { addColor } from "../../../features/Colors/colors";
+import { addColor } from "../../features/Colors/colors";
 
 function AddColor({
   openDialog,

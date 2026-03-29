@@ -38,6 +38,7 @@ export const inputSx = {
     padding: "14px 12px",
   },
 };
+
 export const darkOnlyInputSx = {
   "& .MuiInputBase-root": {
     borderRadius: 2,

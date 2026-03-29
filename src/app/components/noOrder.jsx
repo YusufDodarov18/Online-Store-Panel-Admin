@@ -1,4 +1,4 @@
-import notOrder from "../../assets/norOrder.png"
+import notOrder from "../assets/norOrder.png"
 import { Typography } from "@mui/material";
 
 const NoOrder = () => {

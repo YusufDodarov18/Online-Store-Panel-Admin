@@ -17,7 +17,7 @@ import { Moon, Sun } from "lucide-react";
 import image from "../../app/assets/logo22.svg";
 import { darkTheme, lightTheme } from "../../app/muiStyle.js";
 import { useTheme } from "../../app/theme/themeContext.jsx";
-import BottomNavigation from "../../app/components/Layout/BottomNavigation/bottomNavigation.jsx";
+import BottomNavigation from "../../app/components/bottomNavigation.jsx";
 
 const NAVIGATION = [
   { kind: "header", title: "Main" },

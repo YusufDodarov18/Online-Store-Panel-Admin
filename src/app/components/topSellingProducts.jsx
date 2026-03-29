@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getProducts } from "../../../features/Products/products";
+import { getProducts } from "../../features/Products/products";
 import { Box } from "@mui/material";
-import { useTheme } from "../../theme/themeContext";
-import {API} from "../../../utils/config"
+import { useTheme } from "../theme/themeContext";
+import {API} from "../../utils/config"
 
 const TopSellingProducts = () => {
   const products = useSelector((store) => store.product.products);

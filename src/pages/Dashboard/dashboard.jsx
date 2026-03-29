@@ -14,10 +14,14 @@ import Table from '@mui/material/Table'
 import TableHead from '@mui/material/TableHead'
 import TableBody from '@mui/material/TableBody'
 import { useTheme } from '../../app/theme/themeContext'
-import TopSellingProducts from '../../app/components/ui/topSellingProducts'
-import { useSelector } from 'react-redux'
-import Product from "../../app/components/ui/lastproducts";
-import RecentTransactions from '../../app/components/ui/recentTransactions'
+import TopSellingProducts from '../../app/components/topSellingProducts'
+import { useDispatch, useSelector } from 'react-redux'
+import Product from "../../app/components/lastproducts";
+import RecentTransactions from '../../app/components/recentTransactions'
+import { FadeLoader } from "react-spinners";
+import { useEffect } from 'react';
+import { getProducts } from '../../features/Products/products';
+
 
 
 const options={
@@ -39,13 +43,25 @@ const series=[
 export default function Dashboard() {
   const {theme}=useTheme()
   
-	const products =useSelector(store=>store.product?.products)
+	const dispatch=useDispatch()
+	const { products, loading, error } = useSelector(store => store.product);
+	
+	useEffect(()=>{
+		dispatch(getProducts())
+	},[dispatch])
 
+	if(error){
+      return (
+        <div className="text-center text-red-500 mt-5">
+          Ошибка при загрузке продуктов: {error}
+        </div>
+      );
+	}
+	
 	const sortedProducts = [...products].sort((a, b) => b.views - a.views);
 
   return (
  	<div className='p-5 space-y-8'>
-      
 			<Box className='flex flex-col md:flex-row justify-between gap-5'>
 				<section className='md:w-[60%] space-y-5'>
          	 <Box className='flex flex-col sm:flex-row justify-between gap-4'>
@@ -85,8 +101,13 @@ export default function Dashboard() {
 			<Button className='text-blue-600 hover:text-blue-800 font-semibold transition'>Посмотреть все</Button>
           </Box>
 		  <Box className='flex flex-col gap-4 overflow-y-auto max-h-[420px]'>
-			<TopSellingProducts/>
-		  </Box>
+			{loading&&(
+				<div className="flex justify-center items-center h-[400px]">
+					<FadeLoader color="#008cff" />
+				</div>
+			)}
+			 <TopSellingProducts/>
+		   </Box>
         </section>
       </Box>
 			

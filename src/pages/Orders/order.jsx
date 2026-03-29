@@ -24,7 +24,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../app/theme/themeContext";
-import NoOrder from "../../app/components/ui/noOrder";
+import NoOrder from "../../app/components/noOrder";
 import { orders } from "./order";
 
 const Orders = () => {
@@ -238,7 +238,7 @@ const Orders = () => {
       >
         <Box className="flex justify-between flex-col pr-5 pb-3">
           <Box className="flex justify-between items-center ">
-            <DialogTitle id="alert-dialog-title">Delete All Orders</DialogTitle>
+            <DialogTitle id="alert-dialog-title">Удалить все заказы</DialogTitle>
             <CloseIcon className="cursor-pointer" onClick={handleCloseDialog} />
           </Box>
           <DialogContent>

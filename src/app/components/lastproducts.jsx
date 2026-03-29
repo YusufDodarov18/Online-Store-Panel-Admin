@@ -1,7 +1,7 @@
 import TableRow from "@mui/material/TableRow";
 import Box from "@mui/material/Box";
 import TableCell from "@mui/material/TableCell";
-import { API } from "../../../utils/config";
+import { API } from "../../utils/config";
 
 const Product = ({ names, price, view, images }) => {
   // console.log(view)

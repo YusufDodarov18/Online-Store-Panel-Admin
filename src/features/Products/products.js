@@ -45,7 +45,7 @@ export const updateProduct = createAsyncThunk("Products/updateProduct", async({f
     }
 })
 
-export const deleteProduct = createAsyncThunk("Products/deleteProduct", async(id, {rejectWithValue})=>{
+export const deleteProduct = createAsyncThunk("Products/deleteProduct",async(id, {rejectWithValue})=>{
     try {
         await axiosRequest.delete(`/Products/delete-product?productId=${id}`)
         toast.success('Product delete successfully', { autoClose: 2000 })

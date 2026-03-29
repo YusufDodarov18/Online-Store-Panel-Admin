@@ -22,7 +22,7 @@ import { useTheme } from "../../app/theme/themeContext";
 import { getCategories } from "../../features/Category/categories";
 import { deleteProduct, getProducts } from "../../features/Products/products";
 import { darkOnlyInputSx, darkOnlySelectSx } from "../../app/muiStyle";
-import EmptyProducts from "../../app/components/ui/emptyProducts";
+import EmptyProducts from "../../app/components/emptyProducts";
 import { API } from "../../utils/config.js";
 
 const paginationModel = { page: 0, pageSize: 5 };
@@ -157,7 +157,7 @@ function Products() {
               </MenuItem>
               {categories.map((category) => (
                 <MenuItem
-                  value={category.categoryName}
+                  value={category?.categoryName}
                   key={category.categoryId}
                 >
                   <Box className="flex items-center gap-3">
