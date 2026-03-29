@@ -50,13 +50,6 @@ export default function Dashboard() {
 		dispatch(getProducts())
 	},[dispatch])
 
-	if(error){
-      return (
-        <div className="text-center text-red-500 mt-5">
-          Ошибка при загрузке продуктов: {error}
-        </div>
-      );
-	}
 	
 	const sortedProducts = [...products].sort((a, b) => b.views - a.views);
 
