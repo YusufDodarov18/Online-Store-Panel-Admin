@@ -144,7 +144,7 @@ export default function Dashboard() {
   									      key={el.id} 
   									      names={el.productName} 
   									      price={`$${el.price}`} 
-  									      images={el.images?.[0]?.image} 
+  									      images={el.image} 
   									      view={el.viewCount} 
   									    />
   									  ))

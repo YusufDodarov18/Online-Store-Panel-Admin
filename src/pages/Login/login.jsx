@@ -14,7 +14,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-
+  
   const handleSubmit = async () => {
     if (!userName.trim() || !password.trim()) {
       toast.error("Please fill in both username and password.", {
@@ -32,7 +32,7 @@ function Login() {
 
     try {
       const { data } = await axios.post(
-        `http://localhost:3000/Auth/login`,
+        `https://online-store-api-f0io.onrender.com/Auth/login`,
         admin,
       );
 

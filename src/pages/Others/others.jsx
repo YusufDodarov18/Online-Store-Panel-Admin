@@ -409,7 +409,7 @@ const Ohters = () => {
                     >
                       <Box className="flex justify-center">
                         <img
-                          src={`${API}/images/${elem?.images[0]?.image}`}
+                          src={`${API}/images/${elem?.image}`}
                           alt={elem.productName}
                           width={100}
                         />

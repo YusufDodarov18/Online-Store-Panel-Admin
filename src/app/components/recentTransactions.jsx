@@ -18,9 +18,9 @@ export default function RecentTransactions({ products }) {
                 component="th"
                 scope="row"
               >
-                {e.images?.length > 0 ? (
+                {e.image ? (
                   <img
-                    src={`${API}/images/${e.images?.[0]?.image}`}
+                    src={`${API}/images/${e.image}`}
                     alt={e.productName}
                     className="w-10 h-10 object-cover rounded"
                   />

@@ -115,9 +115,9 @@ export default function AddProduct() {
   }, [dispatch]);
 
   useEffect(() => {
-    const fetchColors = async () => {
+    const fetchColors = () => {
       setIsLoadingColors(true);
-      await dispatch(getColors());
+      dispatch(getColors());
       setIsLoadingColors(false);
     };
     fetchColors();
@@ -219,6 +219,30 @@ export default function AddProduct() {
         }
       });
     }
+  };
+
+  const handleChangeFile = (e) => {
+    const files = e?.target?.files;
+    if (files) {
+      setImages((prev) => [...prev, ...Array.from(files)]);
+    }
+  };
+
+  const addNewColor = (newColor) => {
+    setSelectedColors((prev) => {
+      const isExist = prev.find((item) => item.colorId === newColor.colorId);
+      if (isExist) {
+        toast.info("Color removed from list!", {
+          autoClose: 2000,
+        });
+        return prev.filter((item) => item.colorId !== newColor.colorId);
+      } else {
+        toast.success("Color added to list! Successfully", {
+          autoClose: 2000,
+        });
+        return [...prev, newColor];
+      }
+    });
   };
 
   const loadingColor = keyframes`
@@ -608,26 +632,7 @@ export default function AddProduct() {
                     }}
                     key={elem.colorId}
                     className="relative group w-9 h-9 rounded-[50%] cursor-pointer"
-                    onClick={() => {
-                      setSelectedColors((prev) => {
-                        const isExist = prev.find(
-                          (item) => item.colorId === elem.colorId,
-                        );
-                        if (isExist) {
-                          toast.info("Color removed from list!", {
-                            autoClose: 2000,
-                          });
-                          return prev.filter(
-                            (item) => item.colorId !== elem.colorId,
-                          );
-                        } else {
-                          toast.success("Color added to list! Successfully", {
-                            autoClose: 2000,
-                          });
-                          return [...prev, elem];
-                        }
-                      });
-                    }}
+                    onClick={()=> addNewColor(elem)}
                   >
                     <span
                       onClick={(e) => {
@@ -652,12 +657,7 @@ export default function AddProduct() {
               multiple
               ref={fileRef}
               className="hidden"
-              onChange={(e) => {
-                const files = e?.target?.files;
-                if (files) {
-                  setImages((prev) => [...prev, ...Array.from(files)]);
-                }
-              }}
+              onChange={(e) => handleChangeFile(e)}
             />
             <UploadImage click={() => fileRef.current?.click()} />
             <TableContainer component={Paper}>
