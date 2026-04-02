@@ -1,7 +1,7 @@
 import "react-toastify/dist/ReactToastify.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "../../pages/Login/login.jsx";
-import DashboardLayout from "../../pages/DashBoardLayout/dashboard.jsx";
+import DashboardLayout from "../../pages/DashboardLayout/dashboard.jsx"
 import DashBoard from "../../pages/Dashboard/dashboard.jsx";
 import Error from "../../pages/Error/error.jsx";
 import {
