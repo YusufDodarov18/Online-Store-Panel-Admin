@@ -141,7 +141,7 @@ function EditProduct() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (products.length > 0) {
+    if (products?.length > 0) {
       const findProductById = products.find((e) => e.productId === id);
       if (findProductById) {
         setNewProductName(findProductById.productName);
@@ -716,7 +716,7 @@ function EditProduct() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {newImages.map((img, index) => (
+                    {newImages?.map((img, index) => (
                       <TableRow key={img.id || index}>
                         <TableCell className="indent-2">
                           <img
