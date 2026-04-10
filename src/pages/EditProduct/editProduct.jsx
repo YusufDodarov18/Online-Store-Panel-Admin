@@ -332,7 +332,7 @@ function EditProduct() {
                     onChange={(e) => setNewCategory(e.target.value)}
                     sx={darkOnlySelectSx}
                   >
-                    {categories.map((category) => (
+                    {categories?.map((category) => (
                       <MenuItem
                         value={category.categoryName}
                         key={category.categoryId}
@@ -358,7 +358,7 @@ function EditProduct() {
                     value={newBrand}
                     onChange={(e) => setNewBrand(e.target.value)}
                   >
-                    {brands.length === 0 ? (
+                    {brands?.length === 0 ? (
                       <MenuItem value="Not Brand">Не бренд</MenuItem>
                     ) : (
                       brands.map((brand) => (
@@ -444,7 +444,7 @@ function EditProduct() {
                     <Typography variant="body1" sx={{ fontWeight: 700, mb: 2 }}>
                       Параметры
                     </Typography>
-                    {options.map((option) => (
+                    {options?.map((option) => (
                       <Box
                         key={option.id}
                         sx={{
@@ -509,7 +509,7 @@ function EditProduct() {
                               pb: 0.5,
                             }}
                           >
-                            {option.values.map((val) => (
+                            {option?.values.map((val) => (
                               <Chip
                                 key={val}
                                 label={val}
