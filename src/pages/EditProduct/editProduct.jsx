@@ -509,7 +509,7 @@ function EditProduct() {
                               pb: 0.5,
                             }}
                           >
-                            {option?.values.map((val) => (
+                            {option?.values?.map((val) => (
                               <Chip
                                 key={val}
                                 label={val}
